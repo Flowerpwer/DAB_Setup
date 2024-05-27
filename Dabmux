@@ -1,0 +1,82 @@
+general {
+    dabmode 1
+    nbframes 0    
+    tist true
+}
+remotecontrol { telnetport 0 }
+ensemble {
+    id 0x4fff
+    ecc 0xec    
+    local-time-offset auto
+    international-table 1
+    label "DAB+ Radio Test"
+    shortlabel "DAB+Test"
+}
+services {
+    srv-p1 { label "Test1" }
+    srv-p2 { label "Test2" }
+    srv-p3 { label "Test3" }
+}
+subchannels {
+sub-p1 {
+        ;  MPEG
+        type dabplus
+        bitrate 120
+        id 1
+        protection 3
+        
+        inputfile "tcp://*:9001"
+        zmq-buffer 40
+        zmq-prebuffering 20
+    }
+    
+    sub-p2 {
+        ;  MPEG
+        type dabplus
+        bitrate 120
+        id 2
+        protection 3
+        
+        inputfile "tcp://*:9002"
+        zmq-buffer 40
+        zmq-prebuffering 20
+    }
+    
+    sub-p3 {
+        ;  MPEG
+        type dabplus
+        bitrate 120
+        id 3
+        protection 3
+        
+        inputfile "tcp://*:9003"
+        zmq-buffer 40
+        zmq-prebuffering 20
+    }    
+}
+components {
+    comp-p1 {
+        label Prog1
+        service srv-p1
+        subchannel sub-p1
+    }
+    
+    comp-p2 {
+        label Prog2
+        service srv-p2
+        subchannel sub-p2
+    }
+    comp-p3 {
+        label Prog3
+        service srv-p3
+        subchannel sub-p3
+    }    
+}
+outputs { 
+    zeromq {
+        ; Listen on all interfaces, on port 9100
+        endpoint "tcp://*:9100"
+        allowmetadata true
+    }
+    throttle "simul://"
+}
